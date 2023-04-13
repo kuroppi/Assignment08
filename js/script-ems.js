@@ -15,31 +15,31 @@ if (localStorage.getItem('employees')) {
 }
 
 // GET DOM ELEMENTS
-const form = document.querySelector('#addForm');
-const empTable = document.querySelector('#empTable');
-const empCount = document.querySelector('#empCount');
+let form = document.querySelector('#addForm');
+let empTable = document.querySelector('#empTable');
+let empCount = document.querySelector('#empCount');
 
 // BUILD THE EMPLOYEES TABLE WHEN THE PAGE LOADS
 buildGrid();
 
 // ADD EMPLOYEE
 form.addEventListener('submit', (e) => {
+
     // PREVENT FORM SUBMISSION
     e.preventDefault();
-    console.log('submitted');
 
     // GET THE VALUES FROM THE TEXT BOXES
-    const id = document.querySelector('#id').value.trim();
-    const name = document.querySelector('#name').value.trim();
-    const extension = document.querySelector('#extension').value.trim();
-    const email = document.querySelector('#email').value.trim();
-    const department = document.querySelector('#department').value;
+    let id            = document.querySelector('#id').value;
+    let name          = document.querySelector('#name').value;
+    let extension     = document.querySelector('#extension').value;
+    let email         = document.querySelector('#email').value;
+    let department    = document.querySelector('#department').value;
 
     // ADD THE NEW EMPLOYEE TO A NEW ARRAY OBJECT
-    const newEmployee = {
-        id: parseInt(id), // convert id to a number
+    let newEmployee = {
+        id: parseInt(id),
         name: name,
-        extension: parseInt(extension), // convert extension to a number
+        extension: parseInt(extension),
         email: email,
         department: department,
     };
@@ -55,16 +55,20 @@ form.addEventListener('submit', (e) => {
 
     // SET FOCUS BACK TO THE ID TEXT BOX
     document.querySelector('#id').focus();
+    
 });
 
 // DELETE EMPLOYEE
 empTable.addEventListener('click', (e) => {
+
     // CONFIRM THE DELETE
     if (e.target.classList.contains('delete')) {
+
         if (confirm('Are you sure you want to delete this employee?')) {
+
             // GET THE SELECTED ROWINDEX FOR THE TR (PARENTNODE.PARENTNODE)
-            const row = e.target.parentNode.parentNode;
-            const rowIndex = row.rowIndex - 1;
+            let row = e.target.parentNode.parentNode;
+            let rowIndex = row.rowIndex - 1;
 
             // REMOVE EMPLOYEE FROM ARRAY
             employees.splice(rowIndex, 1);
@@ -76,56 +80,60 @@ empTable.addEventListener('click', (e) => {
 });
 
 // BUILD THE EMPLOYEES GRID
-function buildGrid(employeesArray) {
-    employeesArray = employeesArray || employees;
+function buildGrid(empArray) {
+    empArray = empArray || employees;
+
     // REMOVE THE EXISTING SET OF ROWS BY REMOVING THE ENTIRE TBODY SECTION
-    const tbody = empTable.querySelector('tbody');
+    let tbody = empTable.querySelector('tbody');
     tbody.remove();
 
     // REBUILD THE TBODY FROM SCRATCH
-    const newTbody = document.createElement('tbody');
+    let newTbody = document.createElement('tbody');
 
     // LOOP THROUGH THE ARRAY OF EMPLOYEES
-    employeesArray.forEach((employee, index) => {
-        // REBUILDING THE ROW STRUCTURE
-        const row = document.createElement('tr');
+    empArray.forEach((employee, index) => {
 
-        const idCell = document.createElement('td');
+        // REBUILDING THE ROW STRUCTURE
+        let row = document.createElement('tr');
+
+        let idCell = document.createElement('td');
         idCell.textContent = employee.id;
         row.appendChild(idCell);
 
-        const nameCell = document.createElement('td');
+        let nameCell = document.createElement('td');
         nameCell.textContent = employee.name;
         row.appendChild(nameCell);
 
-        const extensionCell = document.createElement('td');
+        let extensionCell = document.createElement('td');
         extensionCell.textContent = employee.extension;
         row.appendChild(extensionCell);
 
-        const emailCell = document.createElement('td');
+        let emailCell = document.createElement('td');
         emailCell.textContent = employee.email;
         row.appendChild(emailCell);
 
-        const departmentCell = document.createElement('td');
+        let departmentCell = document.createElement('td');
         departmentCell.textContent = employee.department;
         row.appendChild(departmentCell);
 
-        const deleteCell = document.createElement('td');
+        let deleteCell = document.createElement('td');
         let deleteBtn = document.createElement('button');
+        
         deleteBtn.appendChild(document.createTextNode('X'));
         deleteCell.appendChild(deleteBtn);
         row.appendChild(deleteCell);
         deleteBtn.className = 'btn btn-danger btn-sm float-right delete'
 
         newTbody.appendChild(row);
+
     });
 
     // BIND THE TBODY TO THE EMPLOYEE TABLE
     empTable.appendChild(newTbody);
 
     // UPDATE EMPLOYEE COUNT
-    empCount.textContent = employeesArray.length;
+    empCount.textContent = empArray.length;
 
     // STORE THE ARRAY IN STORAGE
-    localStorage.setItem('employees', JSON.stringify(employeesArray));
+    localStorage.setItem('employees', JSON.stringify(empArray));
 }
